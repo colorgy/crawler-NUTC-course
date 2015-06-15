@@ -82,7 +82,11 @@ class NutcCourseCrawler
           url = datas[11] && !datas[11].css('a').empty? && datas[11].css('a')[0][:href]
           url = url && "http://academic.nutc.edu.tw/#{url[7..-1]}"
 
-          code = CGI.parse(URI(url).query)["flow_no"][0]
+          begin
+            code = CGI.parse(URI(url).query)["flow_no"][0]
+          rescue Exception => e
+            code = nil
+          end
 
           @courses << {
             year: @year,
@@ -90,7 +94,7 @@ class NutcCourseCrawler
             department: datas[1] && datas[1].text.strip,
             # semester: datas[2] && datas[2].text.strip,
             code: code,
-            required: datas[3] && datas[3].text.strip,
+            required: datas[3] && datas[3].text.strip.include?('必'),
             name: datas[4] && datas[4].text.strip,
             lecturer: datas[5] && datas[5].text.strip,
             credits: datas[6] && datas[6].text.to_i,
@@ -128,6 +132,7 @@ class NutcCourseCrawler
         evaluate_script('window.history.back()')
       end
     rescue Exception => e
+      binding.pry
     end
     @courses
   end
