@@ -92,10 +92,13 @@ class NutcCourseCrawler
             code = nil
           end
 
+          department = datas[1] && datas[1].text.strip
+          next if department.nil?
+
           @courses << {
             year: @year,
             term: @term,
-            department: datas[1] && datas[1].text.strip,
+            department: department,
             # semester: datas[2] && datas[2].text.strip,
             code: code,
             required: datas[3] && datas[3].text.strip.include?('必'),
