@@ -32,14 +32,18 @@ class NutcCourseCrawler
   end
 
   def courses
-    visit @query_url
     @courses = []
 
+    visit @query_url
     click_on '　下　一　步　'
     option_count = all('select[name="show_select1"] option').count
 
     begin
       option_count.times do |i|
+        visit @query_url
+        click_on '　下　一　步　'
+
+        sleep 2
         opt = all('select[name="show_select1"] option')[i]
         opt.select_option
         puts opt.text
